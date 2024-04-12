@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  book-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: p@ssw0rd
+      POSTGRES_USER: user
+      POSTGRES_DB: bookdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - book_dbdata:/var/lib/postgresql/data
+
+volumes:
+  book_dbdata:
