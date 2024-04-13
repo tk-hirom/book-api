@@ -12,7 +12,6 @@ services:
       - "5432:5432"
     volumes:
       - book_dbdata:/var/lib/postgresql/data
-      - ./initdb:/docker-entrypoint-initdb.d
 
 volumes:
   book_dbdata:
