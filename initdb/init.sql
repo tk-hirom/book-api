@@ -13,9 +13,9 @@ CREATE TABLE book
 );
 
 INSERT INTO book
-VALUES ('1111111111111',
-        'ちいかわ',
-        'tanaka',
+VALUES ('4065223962',
+        'ちいかわ なんか小さくてかわいいやつ(1) (ワイドKC) ',
+        'ナガノ',
         'tanaka',
         4000,
         '2024-04-01 00:00:00',
