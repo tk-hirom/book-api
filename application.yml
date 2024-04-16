@@ -1,10 +1,16 @@
 spring:
   profiles:
     active: dev
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/bookdb"
+    username: "user"
+    password: "p@ssw0rd"
+    driver-class-name: "org.postgresql.Driver"
 
-app:
-  host: "localhost"
-  port: 5432
-  database: "bookdb"
-  user: "user"
-  password: "p@ssw0rd"
+    # HikariCP settings
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000

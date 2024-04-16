@@ -1,21 +1,16 @@
 package com.example.bookapi.web.repository
 
-import com.example.bookapi.AppProperties
 import com.example.bookapi.web.entity.Book
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.sql.DriverManager
+import javax.sql.DataSource
 
 @Repository
-class BookRepository(private val appProperties: AppProperties) {
+class BookRepository(@Autowired private val dataSource: DataSource) {
     fun getBooks(): List<Book> {
         try {
-            val connection = DriverManager.getConnection(
-                "jdbc:postgresql://" + appProperties.host + ":" + appProperties.port + "/" + appProperties.database,
-                appProperties.user,
-                appProperties.password
-            )
-            connection.use { conn ->
-                conn.createStatement().use { statement ->
+            dataSource.connection.use { connection ->
+                connection.createStatement().use { statement ->  
                     statement.executeQuery("SELECT * FROM book").use { resultSet ->
                         return generateSequence {
                             if (resultSet.next()) {
