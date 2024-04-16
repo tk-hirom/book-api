@@ -2,9 +2,9 @@ spring:
   profiles:
     active: dev
 
-    app:
-      host: "localhost"
-      port: 5432
-      database: "bookdb"
-      user: "user"
-      password: "p@ssw0rd"
+app:
+  host: "localhost"
+  port: 5432
+  database: "bookdb"
+  user: "user"
+  password: "p@ssw0rd"
