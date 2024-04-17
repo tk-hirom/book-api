@@ -1,30 +1,27 @@
 package com.example.bookapi.web.repository
 
 import com.example.bookapi.web.entity.Book
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
-import javax.sql.DataSource
+import java.sql.ResultSet
 
 @Repository
-class BookRepository(@Autowired private val dataSource: DataSource) {
+class BookRepository(private val jdbcTemplate: JdbcTemplate) {
+
+    private val bookMapper: RowMapper<Book> =
+        RowMapper{ rs: ResultSet, _: Int ->
+            Book.convertFrom(
+                rs.getString("title"),
+                rs.getString("author")
+            )
+        }
     fun getBooks(): List<Book> {
-        try {
-            dataSource.connection.use { connection ->
-                connection.createStatement().use { statement ->  
-                    statement.executeQuery("SELECT * FROM book").use { resultSet ->
-                        return generateSequence {
-                            if (resultSet.next()) {
-                                Book.convertFrom(
-                                    resultSet.getString("title"),
-                                    resultSet.getString("author")
-                                )
-                            } else {
-                                null
-                            }
-                        }.toList()
-                    }
-                }
-            }
+        return try {
+            jdbcTemplate.query(
+                "SELECT title, author FROM book",
+                bookMapper
+            )
         } catch (e: Exception) {
             throw Exception("Error while getting books", e)
         }
