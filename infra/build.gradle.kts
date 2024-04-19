@@ -6,7 +6,6 @@ apply(plugin = "org.jetbrains.kotlin.plugin.spring")
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
-    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0") // バージョン指定したら解決した
 }
 
 tasks {
