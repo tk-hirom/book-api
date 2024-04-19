@@ -25,6 +25,7 @@ subprojects {
 		implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
 		implementation("org.postgresql:postgresql")
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+		implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
 	}
 
 	tasks.withType<KotlinCompile> {
