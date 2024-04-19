@@ -16,3 +16,8 @@ spring:
       read-only: false
       connection-init-sql: "SELECT 1"
       auto-commit: false
+#エラーレスポンスの中身を変えるのに必要
+server:
+  error:
+    include-message: always # エラーメッセージがエラーレスポンス
+    include-binding-errors: always

@@ -16,4 +16,12 @@ class BookRepositoryImpl (
             throw Exception("Error while getting books", e)
         }
     }
+
+    override fun fetchBook(isbn: String): Book? {
+        return try {
+            bookMapper.selectBook(isbn)?.toEntity()
+        } catch (e: Exception) {
+            throw Exception("Error while getting a book", e)
+        }
+    }
 }

@@ -11,4 +11,8 @@ class FetchBook(
     fun fetchBooks(): List<Book> {
         return bookRepository.fetchBooks()
     }
+
+    fun fetchBookBy(isbn: String): Book? {
+        return bookRepository.fetchBook(isbn)
+    }
 }

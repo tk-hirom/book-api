@@ -4,4 +4,6 @@ import com.example.app.domain.entity.Book
 
 interface BookRepository {
     fun fetchBooks(): List<Book>
+
+    fun fetchBook(isbn: String): Book?
 }
