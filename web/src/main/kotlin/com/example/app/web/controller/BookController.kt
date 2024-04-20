@@ -24,21 +24,17 @@ class BookController(private val fetchBook: FetchBook) {
     }
 
     @GetMapping("/book")
-    fun book(@Valid @RequestBody bookRequest: BookRequest): BookResponse {
-        /*
-        エンティティ層のバリデーションと同じだがDRY原則から統一していない
-        ビジネスロジックとリクエストのバリデートで意味が異なるから
-         */
-        if (!bookRequest.isbn.matches("[0-9]{13}".toRegex())) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ISBN format")
-        }
-
-        val result = fetchBook.fetchBookBy(bookRequest.isbn)
-        logger.info(result.toString())
-        if(result != null) {
-            return BookResponse.responseOf(result)
-        } else {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No book found. isbn={${bookRequest.isbn}}")
+    fun book(@Valid @RequestBody bookRequest: BookRequest): BookResponse? {
+        return try {
+            val result = fetchBook.fetchBookBy(bookRequest.isbn)
+            if(result != null) {
+                 BookResponse.responseOf(result)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            logger.error("Error while getting book", e)
+            throw e
         }
     }
     companion object {
