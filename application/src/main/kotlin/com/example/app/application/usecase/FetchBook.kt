@@ -26,7 +26,7 @@ class FetchBook(
         try {
             return bookRepository.fetchBook(isbn)
         } catch (dataAccessException: DataAccessException) {
-            throw BookRepositoryException("Error while getting books")
+            throw BookRepositoryException("Error while getting a book")
         } catch (e: Exception) {
             logger.error("Error while getting a book", e)
             throw e

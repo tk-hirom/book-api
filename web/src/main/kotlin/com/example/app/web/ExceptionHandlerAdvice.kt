@@ -1,6 +1,8 @@
 package com.example.app.web
 
 import com.example.app.domain.exception.BookRepositoryException
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -32,9 +34,14 @@ class ExceptionHandlerAdvice {
     }
 
     @ExceptionHandler(BookRepositoryException::class)
-    fun handleBookRepositoryException(ex: BookRepositoryException): Map<String, String> {
-        return mapOf(
-            "reason" to "BookRepository#findでエラーが発生しました"
-        )
+    fun handleBookRepositoryException(ex: BookRepositoryException): ResponseEntity<Map<String, String>> {
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(
+                mapOf(
+                    "status" to HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+                    "reason" to "BookRepository#findでエラーが発生しました"
+                )
+            )
     }
 }
