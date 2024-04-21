@@ -1,5 +1,6 @@
 package com.example.app.web.controller
 
+import com.example.app.application.usecase.AddBook
 import com.example.app.application.usecase.FetchBook
 import com.example.app.web.request.BookRequest
 import com.example.app.web.response.BookResponse
@@ -7,12 +8,16 @@ import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-class BookController(private val fetchBook: FetchBook) {
+class BookController(
+    private val fetchBook: FetchBook,
+    private val addBook: AddBook
+) {
     @GetMapping("/books")
     fun getBooks(): List<BookResponse> {
         return try {
@@ -37,6 +42,23 @@ class BookController(private val fetchBook: FetchBook) {
             throw e
         }
     }
+
+    @PostMapping("/add_book")
+    fun addBook(@Valid @RequestBody bookRequest: BookRequest) {
+        try {
+            addBook.addBook(
+                bookRequest.isbn,
+                bookRequest.title,
+                bookRequest.author,
+                bookRequest.publisher,
+                bookRequest.price
+                )
+        } catch (e: Exception) {
+            logger.error("Error while adding a book", e)
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while adding book")
+        }
+    }
+
     companion object {
         private val logger = LoggerFactory.getLogger(BookController::class.java)
     }

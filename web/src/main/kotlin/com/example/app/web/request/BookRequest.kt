@@ -3,25 +3,33 @@ package com.example.app.web.request
 import com.example.app.domain.ValidISBN
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.slf4j.LoggerFactory
 
 class BookRequest(
     @field:ValidISBN // @ValidISBNと書くとだめ
-    val isbn: String
+    val isbn: String,
+    val title: String,
+    val author: String,
+    val publisher: String,
+    val price: Int
 ) {
     companion object {
         // JSONからこのメソッドを使ってインスタンスを作成する
         @JvmStatic
         @JsonCreator
         fun create(
-            @ValidISBN()
-            @JsonProperty("isbn")
-            isbn: String
+            @ValidISBN() @JsonProperty("isbn") isbn: String,
+            @JsonProperty("title") title: String,
+            @JsonProperty("author") author: String,
+            @JsonProperty("publisher") publisher: String,
+            @JsonProperty("price") price: Int
         ): BookRequest {
-            logger.info("Creating BookRequest with isbn: $isbn")
-            return BookRequest(isbn)
+            return BookRequest(
+                isbn,
+                title,
+                author,
+                publisher,
+                price
+            )
         }
-
-        private val logger = LoggerFactory.getLogger(BookRequest::class.java)
     }
 }

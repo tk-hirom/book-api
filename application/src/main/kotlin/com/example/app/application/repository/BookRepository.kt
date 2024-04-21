@@ -6,4 +6,12 @@ interface BookRepository {
     fun fetchBooks(): List<Book>
 
     fun fetchBook(isbn: String): Book?
+
+    fun addBook(
+        isbn: String,
+        title: String,
+        author: String,
+        publisher: String,
+        price: Int
+    )
 }

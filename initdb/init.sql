@@ -7,8 +7,8 @@ CREATE TABLE book
     author     varchar(100) NOT NULL,
     publisher  varchar(100) NOT NULL,
     price      integer      NOT NULL,
-    created_at timestamp    NOT NULL,
-    updated_at timestamp    NOT NULL,
+    created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (isbn)
 );
 
