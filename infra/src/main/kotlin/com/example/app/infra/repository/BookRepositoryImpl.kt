@@ -41,6 +41,21 @@ class BookRepositoryImpl (
         }
     }
 
+    override fun updateBook(isbn: String, title: String, author: String, publisher: String, price: Int) {
+        try {
+            logger.info("Updating book with isbn: $isbn")
+            bookMapper.updateBook(
+                isbn = isbn,
+                title = title,
+                author = author,
+                publisher = publisher,
+                price = price
+            )
+        } catch (e: Exception) {
+            throw Exception("Error while updating a book", e)
+        }
+    }
+
     companion object {
         private val logger = LoggerFactory.getLogger(BookRepositoryImpl::class.java)
     }

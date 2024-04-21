@@ -14,4 +14,12 @@ interface BookRepository {
         publisher: String,
         price: Int
     )
+
+    fun updateBook(
+        isbn: String,
+        title: String,
+        author: String,
+        publisher: String,
+        price: Int,
+    )
 }
