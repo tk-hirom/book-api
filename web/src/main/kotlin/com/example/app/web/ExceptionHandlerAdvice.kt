@@ -1,5 +1,6 @@
 package com.example.app.web
 
+import com.example.app.domain.exception.BookRepositoryException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -27,6 +28,13 @@ class ExceptionHandlerAdvice {
         return mapOf(
             "reason" to "no handler found",
             "status" to "404"
+        )
+    }
+
+    @ExceptionHandler(BookRepositoryException::class)
+    fun handleBookRepositoryException(ex: BookRepositoryException): Map<String, String> {
+        return mapOf(
+            "reason" to "BookRepository#findでエラーが発生しました"
         )
     }
 }
