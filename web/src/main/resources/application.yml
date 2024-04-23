@@ -1,6 +1,12 @@
 spring:
+  logging:
+    level:
+      com.example.app.web: DEBUG
   profiles:
     active: dev
+  web:
+    resources:
+      add-mappings: false
   datasource:
     url: "jdbc:postgresql://localhost:5432/bookdb"
     username: "user"

@@ -3,6 +3,7 @@ dependencies {
     implementation(project(":application"))
     implementation(project(":domain"))
     implementation(project(":infra"))
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks {
