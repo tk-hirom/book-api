@@ -1,7 +1,7 @@
+logging:
+  level:
+    com.example.app.web: DEBUG
 spring:
-  logging:
-    level:
-      com.example.app.web: DEBUG
   profiles:
     active: dev
   web:
