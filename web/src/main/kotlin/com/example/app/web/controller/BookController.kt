@@ -1,5 +1,6 @@
 package com.example.app.web.controller
 
+import com.example.app.application.usecase.AddBook
 import com.example.app.application.usecase.FetchBook
 import com.example.app.web.request.BookRequest
 import com.example.app.web.response.BookResponse
@@ -7,12 +8,16 @@ import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-class BookController(private val fetchBook: FetchBook) {
+class BookController(
+    private val fetchBook: FetchBook,
+    private val addBook: AddBook
+) {
     @GetMapping("/books")
     fun getBooks(): List<BookResponse> {
         return try {
@@ -24,23 +29,36 @@ class BookController(private val fetchBook: FetchBook) {
     }
 
     @GetMapping("/book")
-    fun book(@Valid @RequestBody bookRequest: BookRequest): BookResponse {
-        /*
-        エンティティ層のバリデーションと同じだがDRY原則から統一していない
-        ビジネスロジックとリクエストのバリデートで意味が異なるから
-         */
-        if (!bookRequest.isbn.matches("[0-9]{13}".toRegex())) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ISBN format")
-        }
-
-        val result = fetchBook.fetchBookBy(bookRequest.isbn)
-        logger.info(result.toString())
-        if(result != null) {
-            return BookResponse.responseOf(result)
-        } else {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No book found. isbn={${bookRequest.isbn}}")
+    fun book(@Valid @RequestBody bookRequest: BookRequest): BookResponse? {
+        return try {
+            val result = fetchBook.fetchBookBy(bookRequest.isbn)
+            if(result != null) {
+                 BookResponse.responseOf(result)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            logger.error("Error while getting book", e)
+            throw e
         }
     }
+
+    @PostMapping("/add_book")
+    fun addBook(@Valid @RequestBody bookRequest: BookRequest) {
+        try {
+            addBook.addBook(
+                bookRequest.isbn,
+                bookRequest.title,
+                bookRequest.author,
+                bookRequest.publisher,
+                bookRequest.price
+                )
+        } catch (e: Exception) {
+            logger.error("Error while adding a book", e)
+            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while adding book")
+        }
+    }
+
     companion object {
         private val logger = LoggerFactory.getLogger(BookController::class.java)
     }

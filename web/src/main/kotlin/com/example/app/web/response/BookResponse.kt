@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator
 class BookResponse private constructor(
     val isbn: String,
     val title: String,
-    val author: String
+    val author: String,
+    val publisher: String,
+    val price: Int,
 ) {
     companion object {
         @JvmStatic
@@ -15,7 +17,9 @@ class BookResponse private constructor(
             return BookResponse(
                 isbn = book.isbn.value,
                 title = book.title,
-                author = book.author
+                author = book.author,
+                publisher = book.publisher,
+                price = book.price
             )
         }
     }
