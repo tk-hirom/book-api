@@ -1,15 +1,14 @@
 package com.example.app.web.controller
 
 import com.example.app.application.usecase.FetchBook
+import com.example.app.domain.exception.BookRepositoryException
 import com.example.app.web.request.BookRequest
 import com.example.app.web.response.BookResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 
 @RestController
 class BookController(private val fetchBook: FetchBook) {
@@ -17,9 +16,11 @@ class BookController(private val fetchBook: FetchBook) {
     fun getBooks(): List<BookResponse> {
         return try {
             fetchBook.fetchBooks().map { BookResponse.responseOf(it) }
+        } catch (bookRepositoryException: BookRepositoryException) {
+            throw bookRepositoryException
         } catch (e: Exception) {
             logger.error("Error while getting books", e)
-            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while getting books")
+            throw e
         }
     }
 
@@ -32,8 +33,10 @@ class BookController(private val fetchBook: FetchBook) {
             } else {
                 null
             }
+        } catch (bookRepositoryException: BookRepositoryException) {
+            throw bookRepositoryException
         } catch (e: Exception) {
-            logger.error("Error while getting book", e)
+            logger.error("Error while getting a book", e)
             throw e
         }
     }
