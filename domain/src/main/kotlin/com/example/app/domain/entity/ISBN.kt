@@ -4,10 +4,10 @@ import com.example.app.domain.ValidISBN
 
 @JvmInline
 value class ISBN private constructor(
-    val value: String
+    @field:ValidISBN val value: String
 ) {
     companion object{
-        fun valueOf(@ValidISBN value: String): ISBN {
+        fun valueOf(value: String): ISBN {
             return ISBN(value)
         }
     }
