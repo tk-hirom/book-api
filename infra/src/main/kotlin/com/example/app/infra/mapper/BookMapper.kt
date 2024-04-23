@@ -4,6 +4,7 @@ import com.example.app.infra.entity.BookDto
 import org.apache.ibatis.annotations.Insert
 import org.apache.ibatis.annotations.Mapper
 import org.apache.ibatis.annotations.Select
+import org.apache.ibatis.annotations.Update
 
 @Mapper
 interface BookMapper {
@@ -19,6 +20,20 @@ interface BookMapper {
     """
     )
     fun insertBook(
+        isbn: String,
+        title: String,
+        author: String,
+        publisher: String,
+        price: Int
+    )
+
+    @Update("""
+        UPDATE book
+        SET title = #{title}, author = #{author}, publisher = #{publisher}, price = #{price}
+        WHERE isbn = #{isbn}
+    """
+    )
+    fun updateBook(
         isbn: String,
         title: String,
         author: String,
