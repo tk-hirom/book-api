@@ -6,6 +6,7 @@ import com.example.app.application.usecase.UpdateBook
 import com.example.app.domain.exception.BookRepositoryException
 import com.example.app.web.request.BookRequest
 import com.example.app.web.response.BookResponse
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,8 +32,13 @@ class BookController(
         }
     }
 
+    // TODO メソッド名の変更と、リクエストISBNだけにする
     @GetMapping("/book")
-    fun book(@Valid @RequestBody bookRequest: BookRequest): BookResponse? {
+    fun book(
+        @Valid @RequestBody bookRequest: BookRequest,
+        request: HttpServletRequest
+    ): BookResponse?{
+        logRequestDetails(request, bookRequest)
         return try {
             val result = fetchBook.fetchBookBy(bookRequest.isbn)
             if(result != null) {
@@ -49,7 +55,11 @@ class BookController(
     }
 
     @PostMapping("/add_book")
-    fun addBook(@Valid @RequestBody bookRequest: BookRequest) {
+    fun addBook(
+        @Valid @RequestBody bookRequest: BookRequest,
+        request: HttpServletRequest
+    ) {
+        logRequestDetails(request, bookRequest)
         try {
             addBook.addBook(
                 bookRequest.isbn,
@@ -65,7 +75,11 @@ class BookController(
     }
 
     @PostMapping("/update_book")
-    fun updateBook(@Valid @RequestBody bookRequest: BookRequest) {
+    fun updateBook(
+        @Valid @RequestBody bookRequest: BookRequest,
+        request: HttpServletRequest
+    ) {
+        logRequestDetails(request, bookRequest)
         try {
             updateBook.updateBook(
                 bookRequest.isbn,
@@ -77,6 +91,16 @@ class BookController(
         } catch (e: Exception) {
             logger.error("Error while updating a book", e)
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while updating book")
+        }
+    }
+
+    private fun logRequestDetails(request: HttpServletRequest, bookRequest: BookRequest) {
+        logger.info("Received request")
+        logger.debug("Request Method: {}", request.method)
+        logger.debug("Request URI: {}", request.requestURI)
+        logger.debug("Request Body: $bookRequest")
+        request.headerNames.asIterator().forEachRemaining { headerName ->
+            logger.debug("Header '{}': {}", headerName, request.getHeader(headerName))
         }
     }
 
