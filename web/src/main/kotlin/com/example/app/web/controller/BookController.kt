@@ -8,10 +8,12 @@ import com.example.app.web.request.BookRequest
 import com.example.app.web.response.BookResponse
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 
 @RestController
 class BookController(
@@ -57,7 +59,7 @@ class BookController(
                 bookRequest.author,
                 bookRequest.publisher,
                 bookRequest.price
-                )
+            )
         } catch (e: Exception) {
             logger.error("Error while adding a book", e)
             throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while adding book")

@@ -16,13 +16,19 @@ class ExceptionHandlerAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): Map<String, Any> {
-        val errors = ex.bindingResult.fieldErrors.map {
-            "${it.field}: ${it.defaultMessage}"
+        return buildMap {
+            put("reason", "invalid parameter")
+
+            val fieldErrors = ex.bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+            if (fieldErrors.isNotEmpty()) {
+                put("fieldErrors", fieldErrors)
+            }
+
+            val globalErrors = ex.bindingResult.globalErrors.map { "${it.objectName}: ${it.defaultMessage}" }
+            if (globalErrors.isNotEmpty()) {
+                put("globalErrors", globalErrors)
+            }
         }
-        return mapOf(
-            "reason" to "invalid parameter",
-            "detail" to errors
-        )
     }
 
     @ExceptionHandler(NoHandlerFoundException::class)
