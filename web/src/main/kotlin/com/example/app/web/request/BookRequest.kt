@@ -1,9 +1,11 @@
 package com.example.app.web.request
 
 import com.example.app.domain.ValidISBN
+import com.example.app.web.request.validator.ValidBookRequest
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@ValidBookRequest
 class BookRequest(
     @field:ValidISBN // @ValidISBNと書くとだめ
     val isbn: String,
