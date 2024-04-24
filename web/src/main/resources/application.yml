@@ -21,10 +21,3 @@ server:
   error:
     include-message: always # エラーメッセージがエラーレスポンス
     include-binding-errors: always
-
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
-        validation: DEBUG
