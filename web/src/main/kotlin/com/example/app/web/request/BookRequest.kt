@@ -20,17 +20,17 @@ class BookRequest(
         @JsonCreator
         fun create(
             @ValidISBN() @JsonProperty("isbn") isbn: String,
-            @JsonProperty("title") title: String,
-            @JsonProperty("author") author: String,
-            @JsonProperty("publisher") publisher: String,
-            @JsonProperty("price") price: Int
+            @JsonProperty("title") title: String?,
+            @JsonProperty("author") author: String?,
+            @JsonProperty("publisher") publisher: String?,
+            @JsonProperty("price") price: Int?
         ): BookRequest {
             return BookRequest(
                 isbn,
-                title,
-                author,
-                publisher,
-                price
+                title ?: "",
+                author ?: "",
+                publisher ?: "",
+                price ?: 0
             )
         }
     }
