@@ -9,17 +9,25 @@ class BookResponse private constructor(
     val author: String,
     val publisher: String,
     val price: Int,
+    val genre: String,
+    val rating: String,
 ) {
     companion object {
         @JvmStatic
         @JsonCreator
-        fun responseOf(book: Book): BookResponse {
+        fun responseOf(
+            book: Book,
+            genre: String?,
+            rating: String?,
+        ): BookResponse {
             return BookResponse(
                 isbn = book.isbn.value,
                 title = book.title,
                 author = book.author,
                 publisher = book.publisher,
-                price = book.price
+                price = book.price,
+                genre = genre ?: "",
+                rating = rating ?: "",
             )
         }
     }

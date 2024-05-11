@@ -2,6 +2,7 @@ package com.example.app.web.controller
 
 import com.example.app.application.usecase.AddBook
 import com.example.app.application.usecase.FetchBook
+import com.example.app.application.usecase.FetchBookDetails
 import com.example.app.application.usecase.UpdateBook
 import com.example.app.domain.exception.BookRepositoryException
 import com.example.app.web.request.BookRequest
@@ -20,12 +21,13 @@ import org.springframework.web.server.ResponseStatusException
 class BookController(
     private val fetchBook: FetchBook,
     private val addBook: AddBook,
-    private val updateBook: UpdateBook
+    private val updateBook: UpdateBook,
+    private val fetchBookDetails: FetchBookDetails
 ) {
     @GetMapping("/books")
     fun getBooks(): List<BookResponse> {
         return try {
-            fetchBook.fetchBooks().map { BookResponse.responseOf(it) }
+            fetchBook.fetchBooks().map { BookResponse.responseOf(it, null, null) }
         } catch (bookRepositoryException: BookRepositoryException) {
             throw bookRepositoryException
         } catch (e: Exception) {
@@ -34,7 +36,6 @@ class BookController(
         }
     }
 
-    // TODO メソッド名の変更と、リクエストISBNだけにする
     @GetMapping("/book")
     fun book(
         @Valid @RequestBody bookRequest: BookRequest,
@@ -42,9 +43,11 @@ class BookController(
     ): BookResponse?{
         logRequestDetails(request, bookRequest)
         return try {
+            val bookDetails = fetchBookDetails.fetchBookDetails(bookRequest.isbn)
+
             val result = fetchBook.fetchBookBy(bookRequest.isbn)
             if(result != null) {
-                 BookResponse.responseOf(result)
+                BookResponse.responseOf(result, bookDetails?.genre, bookDetails?.rating)
             } else {
                 null
             }
@@ -100,7 +103,7 @@ class BookController(
         logger.info("Received request")
         logger.debug("Request Method: {}", request.method)
         logger.debug("Request URI: {}", request.requestURI)
-        logger.debug("Request Body: $bookRequest")
+        logger.debug("Request Body: {}", bookRequest)
         request.headerNames.asIterator().forEachRemaining { headerName ->
             logger.debug("Header '{}': {}", headerName, request.getHeader(headerName))
         }
